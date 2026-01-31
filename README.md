@@ -334,29 +334,3 @@ This project demonstrates how **integrating social sentiment, crisis data, and r
 * Protect customer trust and market share
 
 ---
-
-## 💼 Portfolio Value Statement
-
-This case study showcases my ability to:
-
-* Translate **complex data into executive insights**
-* Connect **social analytics to financial impact**
-* Design **decision-ready KPI frameworks**
-* Build analytics that **drive action, not just visuals**
-
----
-
-### ✅ How to Use on GitHub
-
-1. Create a new repository
-2. Add a file named **README.md**
-3. Paste everything above
-4. Commit
-
-If you want next:
-
-* A **repo folder structure** (`/sql`, `/powerbi`, `/data`, `/docs`)
-* A **project banner image**
-* Or a **second README for recruiters**
-
-Say the word.
