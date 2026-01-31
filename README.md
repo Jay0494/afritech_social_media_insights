@@ -50,6 +50,137 @@ The analysis was designed to answer four core business questions:
 
 ---
 
+## 🧹 Data Cleaning & Processing (SQL)
+
+### From Denormalized Data to an Analytics-Ready Model
+
+The original AfriTech dataset was delivered as a **single denormalized table** containing a mixture of customer data, transaction records, social media interactions, and crisis/complaint events. While comprehensive, this structure introduced significant analytical risk due to duplicated records, mixed data granularity, and inconsistent data types.
+
+Before any analysis could be trusted, the data required careful cleaning, validation, and normalization using SQL.
+
+---
+
+### Initial Data Challenges
+
+The raw dataset presented several issues commonly found in real-world business data:
+
+* Customer, transaction, social media, and crisis data were repeated across multiple rows
+* Transactions appeared multiple times due to being joined with social and crisis records
+* Key numeric fields (revenue, engagement metrics, income) were stored as text
+* Boolean indicators (brand and competitor mentions) were not analysis-ready
+* Crisis resolution status values were system-oriented rather than business-readable
+
+Analyzing the data in its raw form would have resulted in **inflated KPIs, incorrect revenue totals, and misleading insights**.
+
+---
+
+### Data Type Standardization
+
+After loading the raw data into a staging table, key columns were converted to appropriate data types:
+
+* Revenue, income, influencer scores, and engagement metrics were converted to numeric formats
+* Engagement counts and NPS responses were converted to integers
+* Brand and competitor mentions were converted to boolean fields
+* A cleaned transaction date column was introduced to support consistent time-series analysis without overwriting raw values
+
+This step ensured accurate aggregation, filtering, and KPI computation.
+
+---
+
+### Data Normalization Approach
+
+To resolve duplication and mixed granularity, the dataset was normalized into **separate, purpose-driven tables**, each with a clear analytical role.
+
+#### Customer Table
+
+A dedicated customer table was created using distinct customer records.
+This established a **single source of truth** for customer demographics, income, and customer type, eliminating repeated customer attributes across rows.
+
+#### Transactions Table
+
+Transaction-level data was isolated into its own table containing:
+
+* purchase amounts
+* products purchased
+* recall indicators
+* transaction dates
+* customer references
+
+This separation allowed revenue, transaction volume, and average order value to be calculated accurately.
+
+#### Social Media Table
+
+Social media interactions were extracted into a standalone table capturing:
+
+* platform and post type
+* engagement metrics
+* sentiment
+* brand and competitor mentions
+
+Linking these records to customers enabled engagement and sentiment analysis without inflating transaction counts.
+
+#### Crisis Table
+
+Crisis and complaint records were separated into a dedicated table containing:
+
+* crisis event dates
+* first response dates
+* resolution status
+* affected products
+
+Only valid crisis events were included, ensuring the table reflected true operational incidents.
+
+---
+
+### Duplicate Transaction Removal
+
+Once transactions were isolated, duplicate records became visible.
+These duplicates originated from the original denormalized structure, where a single purchase appeared multiple times.
+
+Duplicates were identified using a window function based on:
+
+* customer
+* product
+* purchase amount
+* transaction date
+
+Only one valid transaction per group was retained.
+A **uniqueness constraint** was then applied to prevent future duplication and protect revenue accuracy.
+
+---
+
+### Resolution Status Standardization
+
+Crisis resolution values stored as `TRUE` / `FALSE` were converted into business-readable labels:
+
+* **Resolved**
+* **Unresolved**
+
+This improved clarity for reporting and ensured crisis KPIs were immediately interpretable by stakeholders.
+
+---
+
+### Outcome
+
+By the end of the cleaning and normalization process, the original high-risk dataset was transformed into a **clean, relational, analytics-ready data model** consisting of:
+
+* a customer master table
+* a deduplicated transaction fact table
+* a social media engagement fact table
+* a crisis and complaints fact table
+
+This structure enabled reliable analysis of:
+
+* revenue performance and AOV
+* social sentiment and engagement
+* crisis response effectiveness
+* the financial impact of unresolved complaints and product recalls
+
+Most importantly, it ensured that all insights in this case study were built on **accurate, trustworthy data foundations**.
+Powerbi desktop was connected to postgreSQL and imported to perbi for further processing and analysis.
+
+---
+
 ## 4. Key KPIs Tracked
 
 ### Sales & Operations
